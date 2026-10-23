@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS Admin - Properti Lumajang Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+  <!-- LOGIN CONTAINER -->
+  <div id="loginSection" class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+      <div class="text-center mb-6">
+        <div class="text-4xl mb-2">🏠</div>
+        <h2 class="text-2xl font-bold text-white">CMS Property Manager</h2>
+        <p class="text-xs text-slate-400 mt-1">Masuk untuk mengedit harga, deskripsi, foto/video & data website</p>
+      </div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Username / ID</label>
+          <input type="text" id="loginUsername" placeholder="Default: admin" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
+          <input type="password" id="loginPassword" placeholder="Default: admin123" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-500">
+        </div>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow-lg flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket"></i> Masuk Dashboard
+        </button>
+      </form>
+      <div class="mt-4 text-center">
+        <a href="index.html" class="text-xs text-blue-400 hover:underline">← Kembali ke Website Utama</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD ADMIN -->
+  <div id="dashboardSection" class="hidden min-h-screen flex flex-col">
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-30 px-6 py-4 flex justify-between items-center shadow-md">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🏠</span>
+        <div>
+          <h1 class="font-bold text-base leading-tight">Admin CMS Properti Lumajang</h1>
+          <p class="text-xs text-slate-400">Panel Pengelolaan Properti, Media & Info Website</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="index.html" target="_blank" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-3 py-2 rounded-lg transition flex items-center gap-1.5 border border-slate-600">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Pratinjau Website
+        </a>
+        <button onclick="handleLogout()" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 text-xs px-3 py-2 rounded-lg transition border border-red-500/30 flex items-center gap-1.5">
+          <i class="fa-solid fa-power-off"></i> Logout
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-6 space-y-8">
+      <!-- TAB NAVIGATION -->
+      <div class="flex border-b border-slate-700 gap-4">
+        <button onclick="switchTab('properti')" id="tabBtnProperti" class="pb-3 border-b-2 border-blue-500 text-blue-400 font-semibold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-house"></i> Kelola Properti
+        </button>
+        <button onclick="switchTab('profile')" id="tabBtnProfile" class="pb-3 border-b-2 border-transparent text-slate-400 font-semibold text-sm hover:text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-user-gear"></i> Info Profil & Whatsapp
+        </button>
+      </div>
+
+      <!-- TAB 1: KELOLA PROPERTI -->
+      <div id="tabPropertiContent" class="space-y-6">
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-md">
+          <h3 class="text-base font-bold mb-4 text-blue-400 flex items-center gap-2" id="formPropertyTitle">
+            <i class="fa-solid fa-circle-plus"></i> Tambah Properti Baru
+          </h3>
+          <form id="propertyForm" onsubmit="handleSaveProperty(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input type="hidden" id="propEditId" value="">
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Properti *</label>
+              <input type="text" id="propNama" required placeholder="Contoh: Grand Lumajang Residence" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Developer *</label>
+              <input type="text" id="propDeveloper" required placeholder="PT. Developer Sukses" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Lokasi (Kecamatan/Area) *</label>
+              <input type="text" id="propLokasi" required placeholder="Kec. Lumajang" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+            </div>
+
+            <!-- UPLOAD FOTO UTAMA DARI HP / LAPTOP -->
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Upload Foto Utama / Galeri *</label>
+              <input type="file" id="fileGambar" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
+              <input type="hidden" id="propGambar">
+              <div id="previewGambarWrap" class="mt-2 hidden">
+                <img id="previewGambar" src="" class="h-24 w-auto rounded border border-slate-700 object-cover" />
+              </div>
+            </div>
+
+            <!-- UPLOAD VIDEO PROPERTI DARI HP / LAPTOP -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Upload Video Properti (Opsional)</label>
+              <input type="file" id="fileVideo" accept="video/*" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
+              <input type="hidden" id="propVideo">
+              <div id="previewVideoWrap" class="mt-2 hidden">
+                <video id="previewVideo" class="h-24 w-auto rounded border border-slate-700" controls></video>
+              </div>
+            </div>
+
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Alamat Lengkap *</label>
+              <input type="text" id="propAlamat" required placeholder="Jl. Raya Lumajang No. 123" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Tipe Properti *</label>
+              <select id="propTipe" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+                <option value="Rumah Komersil">Rumah Komersil</option>
+                <option value="Rumah Subsidi">Rumah Subsidi</option>
+                <option value="Ruko">Ruko</option>
+                <option value="Tanah">Tanah</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Harga (Rp) *</label>
+              <input type="number" id="propHarga" required placeholder="450000000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-emerald-400 font-bold">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Status Properti *</label>
+              <select id="propStatus" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+                <option value="Ready Stock">Ready Stock</option>
+                <option value="Indent">Indent / Uang Muka</option>
+                <option value="Terjual">Terjual (Sold)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Luas Tanah (m²) / Bangunan (m²)</label>
+              <div class="flex gap-2">
+                <input type="number" id="propLT" placeholder="LT (90)" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+                <input type="number" id="propLB" placeholder="LB (60)" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Kamar Tidur / Mandi</label>
+              <div class="flex gap-2">
+                <input type="number" id="propKT" placeholder="KT (3)" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+                <input type="number" id="propKM" placeholder="KM (2)" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+              </div>
+            </div>
+
+            <div class="md:col-span-3">
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Deskripsi Lengkap & Fasilitas *</label>
+              <textarea id="propDeskripsi" rows="3" required placeholder="Tuliskan spesifikasi bangunan, keunggulan lokasi, fasilitas cluster..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100"></textarea>
+            </div>
+
+            <div class="md:col-span-3 flex justify-end gap-2 mt-2">
+              <button type="button" onclick="resetPropForm()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-4 py-2 rounded-lg font-semibold">Batal</button>
+              <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-5 py-2 rounded-lg font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Properti
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-md">
+          <div class="p-4 bg-slate-800/80 border-b border-slate-700 flex justify-between items-center">
+            <h3 class="font-bold text-sm text-slate-200"><i class="fa-solid fa-list mr-2"></i> Daftar Properti Aktif</h3>
+            <span id="propCountBadge" class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-1 rounded-full border border-blue-500/30">0 Total</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900 text-slate-400 border-b border-slate-700 uppercase">
+                <tr>
+                  <th class="p-3">Foto</th>
+                  <th class="p-3">Nama Properti & Developer</th>
+                  <th class="p-3">Lokasi / Tipe</th>
+                  <th class="p-3">Harga</th>
+                  <th class="p-3">Status</th>
+                  <th class="p-3 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="adminPropTable" class="divide-y divide-slate-700/50"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: KELOLA PROFIL & KONTAK -->
+      <div id="tabProfileContent" class="hidden space-y-6">
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-md max-w-2xl">
+          <h3 class="text-base font-bold mb-4 text-blue-400 flex items-center gap-2">
+            <i class="fa-solid fa-user-pen"></i> Pengaturan Informasi Sales & Foto Profil Landing Page
+          </h3>
+
+          <form onsubmit="handleSaveConfig(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Sales / Marketing *</label>
+              <input type="text" id="cfgNama" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Jabatan / Tagline *</label>
+              <input type="text" id="cfgJabatan" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nomor WhatsApp (Format: 628xxx) *</label>
+              <input type="text" id="cfgWA" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100 font-mono">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Email Kontak</label>
+              <input type="email" id="cfgEmail" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+            </div>
+
+            <!-- UPLOAD FOTO PROFIL LANDING PAGE DARI DEVICE -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Upload Foto Profil Landing Page</label>
+              <input type="file" id="fileFotoProfil" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
+              <input type="hidden" id="cfgFoto">
+              <div id="previewProfilWrap" class="mt-2 hidden">
+                <img id="previewFotoProfil" src="" class="h-20 w-20 rounded-full object-cover border-2 border-blue-500" />
+              </div>
+            </div>
+
+            <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Informasi Sales
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
